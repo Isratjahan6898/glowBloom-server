@@ -29,6 +29,24 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+   const serviceCollection= client.db('glowBloom').collection('service')
+   const bookCollection= client.db('glowBloom').collection('books')
+ //get all services
+
+ app.get('/service', async(req,res)=>{
+
+  const result = await serviceCollection.find().toArray();
+  res.send(result)
+ })
+
+
+//save service 
+app.post('/service', async(req,res)=>{
+    const serviceData =req.body;
+    const result =await serviceCollection.insertOne(serviceData);
+    res.send(result)
+  })
+
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     // Send a ping to confirm a successful connection
