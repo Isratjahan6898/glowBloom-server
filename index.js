@@ -65,12 +65,21 @@ app.post('/service', async(req,res)=>{
     res.send(result)
   })
 
+  //get all service by specific email
+
+  app.get('/servicess/:email', async(req,res)=>{
+    const email = req.params.email;
+   
+    const query={'provider.email':email}
+    
+    const result = await serviceCollection.find(query).toArray();
+    res.send(result)
+  })
+
   //save book 
 
   app.post('/book', async(req,res)=>{
     const bookData= req.body;
-    
- 
     const result= await bookCollection.insertOne(bookData);
     res.send(result);
   })
