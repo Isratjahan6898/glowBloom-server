@@ -76,12 +76,76 @@ app.post('/service', async(req,res)=>{
     res.send(result)
   })
 
+  // delete service 
+
+  app.delete('/service/:id', async(req,res)=>{
+    const id = req.params.id;
+    const query= {_id: new ObjectId(id)}
+    const result = await serviceCollection.deleteOne(query)
+    res.send(result)
+  })
+
+  // update service
+  app.put('/service/:id',async(req,res)=>{
+    const id = req.params.id;
+    const serviceData = req.body;
+    const query = {_id: new ObjectId (id)}
+    const options = {upsert: true}
+    const updateDoc={
+      $set:{
+        ...serviceData,
+      },
+    }
+    const result = await serviceCollection.updateOne(query,updateDoc,options)
+    res.send(result)
+  })
+  
+
+  // get all book data
+  app.get('/book', async(req,res)=>{
+   const result = await bookCollection.find().toArray();
+    res.send(result)
+   })
   //save book 
+
+
+  app.get('/service-to-do/:email',async (req,res)=>{
+    const email= req.params.email;
+    const query ={providerEmail:email}
+    const cursor = bookCollection.find(query);
+    const result =await cursor.toArray();
+    res.send(result)
+  })
+
+
 
   app.post('/book', async(req,res)=>{
     const bookData= req.body;
     const result= await bookCollection.insertOne(bookData);
     res.send(result);
+  })
+
+  app.patch('/purchases/:id', async(req,res)=>{
+    const id =req.params.id;
+    const query= {_id: new ObjectId(id)}
+    const status = req.body
+    console.log(req.body);
+    const statusUpdate = {
+      $set: {
+        ...status
+      }
+    }
+    const result = await bookCollection.updateOne(query, statusUpdate)
+    res.send(result)
+  })
+
+  app.get('/books/:email', async(req,res)=>{
+    const email = req.params.email;
+   
+    const query={email}
+    
+    const result = await bookCollection.find(query).toArray();
+    res.send(result)
   })
 
     // Connect the client to the server	(optional starting in v4.7)
